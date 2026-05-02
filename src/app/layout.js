@@ -1,6 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "./components/Navbar";
+// import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { Toaster } from "react-hot-toast";
 
@@ -26,7 +26,7 @@ export default function RootLayout({ children }) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="bg-linear-to-r from-green-50 via-green-50 to-sky-50 min-h-screen">
-        <Navbar />
+        {/* <Navbar /> */}
         <main className="max-w-5xl mx-auto py-10">{children}</main>
         <Footer />
         <Toaster position="top-center" />

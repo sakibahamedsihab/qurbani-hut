@@ -1,5 +1,5 @@
 import { getDataWithId } from "@/utils/getData";
-import Details from "@/app/components/Details";
+// import Details from "@/app/components/Details";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 
@@ -20,7 +20,7 @@ export default async function DetailsPage({ params }) {
       >
         <ArrowLeft /> Back to All Animals
       </Link>
-      <main>{<Details key={cow.id} cow={cow} />}</main>
+      {/* <main>{<Details key={cow.id} cow={cow} />}</main> */}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import { authClient } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
 import Link from "next/link";
 import Image from "next/image";
+import { signOut } from "better-auth/api";
 
 export default function Navbar() {
   const { data: session } = authClient.useSession();
@@ -21,9 +22,16 @@ export default function Navbar() {
           <div className="flex items-center gap-5">
             <h1>{session.user.name}</h1>
             <div className="relative w-15 h-15">
-              <Image src={session.user.image} className="rounded-full" alt={session.user.name} fill />
+              <Image
+                src={session.user.image}
+                className="rounded-full"
+                alt={session.user.name}
+                fill
+              />
             </div>
-            <Button variant="outline">Logout</Button>
+            <Button onClick={() => signOut()} variant="outline">
+              Logout
+            </Button>
           </div>
         ) : (
           <div className="flex items-center gap-2">
