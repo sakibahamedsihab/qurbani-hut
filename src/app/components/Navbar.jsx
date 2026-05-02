@@ -1,8 +1,12 @@
+"use client";
+import { authClient } from "@/lib/auth-client";
 import { Button } from "@heroui/react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
-  const isLoggedIn = false;
+  const { data: session } = authClient.useSession();
+  console.log(session);
   return (
     <nav className="flex  justify-between items-center px-20 py-5 shadow-sm bg-white">
       <h1 className="text-4xl font-bold text-[#1A6B3C]">Qurbani Estate</h1>
@@ -13,9 +17,12 @@ export default function Navbar() {
       </ul>
 
       <div className="flex gap-3">
-        {isLoggedIn ? (
-          <div className="flex items-center gap-2">
-            <h1>Avatar</h1>
+        {session ? (
+          <div className="flex items-center gap-5">
+            <h1>{session.user.name}</h1>
+            <div className="relative w-15 h-15">
+              <Image src={session.user.image} className="rounded-full" alt={session.user.name} fill />
+            </div>
             <Button variant="outline">Logout</Button>
           </div>
         ) : (

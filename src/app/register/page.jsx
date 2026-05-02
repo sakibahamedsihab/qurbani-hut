@@ -3,8 +3,11 @@ import { useState } from "react";
 import { User, Mail, Link as LinkIcon, Lock, Globe } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -17,17 +20,34 @@ export default function RegisterPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // পাসওয়ার্ড ভ্যালিডেশন চেক 🔑
     if (formData.password.length < 8) {
       toast.error("Password must be at least 8 characters long");
       return;
     }
 
-    console.log("Registering with:", formData);
-    toast.success("Account created successfully!");
+    const { data, error } = await authClient.signUp.email({
+      email: formData.email,
+      password: formData.password,
+      name: formData.name,
+      image: formData.image,
+    });
+
+    if (error) {
+      toast.error(error.message || "Registration failed!");
+    } else {
+      toast.success("Account created successfully!");
+      router.push("/login");
+    }
+  };
+
+  const handleGoogleRegister = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
   };
 
   return (
@@ -128,7 +148,6 @@ export default function RegisterPage() {
           </button>
         </form>
 
-        {/* Divider */}
         <div className="relative my-8 text-center">
           <hr className="border-gray-200" />
           <span className="absolute left-1/2 -top-3 -translate-x-1/2 bg-white px-4 text-xs text-gray-400 font-medium">
@@ -136,8 +155,11 @@ export default function RegisterPage() {
           </span>
         </div>
 
-        {/* Google Register */}
-        <button className="w-full border border-gray-200 py-3 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition-all font-medium text-gray-700">
+        {/* Google Register Button */}
+        <button
+          onClick={handleGoogleRegister}
+          className="w-full border border-gray-200 py-3 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition-all font-medium text-gray-700"
+        >
           <Globe size={20} className="text-blue-500" />
           Register with Google
         </button>

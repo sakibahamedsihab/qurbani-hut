@@ -3,8 +3,11 @@ import { useState } from "react";
 import { Mail, Lock, LogIn, Globe } from "lucide-react";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { authClient } from "@/lib/auth-client"; // তোমার ক্লায়েন্ট ফাইল
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,16 +18,32 @@ export default function LoginPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // সিম্পল লগইন লজিক (আপাতত) 🔑
-    if (formData.email && formData.password) {
-      console.log("Logging in with:", formData);
-      toast.success("Welcome Back!");
-    } else {
+    if (!formData.email || !formData.password) {
       toast.error("Please fill in all fields");
+      return;
     }
+
+    const { data, error } = await authClient.signIn.email({
+      email: formData.email,
+      password: formData.password,
+    });
+
+    if (error) {
+      toast.error(error.message || "Invalid credentials!");
+    } else {
+      toast.success("Welcome Back!");
+      router.push("/");
+    }
+  };
+
+  const handleGoogleLogin = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/",
+    });
   };
 
   return (
@@ -92,18 +111,6 @@ export default function LoginPage() {
             </div>
           </div>
 
-          {/* Remember Me */}
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="remember"
-              className="rounded border-gray-300 text-[#1A6B3C] focus:ring-[#1A6B3C]"
-            />
-            <label htmlFor="remember" className="text-xs text-gray-500">
-              Remember me for 30 days
-            </label>
-          </div>
-
           <button
             type="submit"
             className="w-full bg-[#064E3B] text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 hover:bg-[#043d2e] transition-all shadow-md"
@@ -120,13 +127,16 @@ export default function LoginPage() {
         </div>
 
         {/* Google Login */}
-        <button className="w-full border border-gray-200 py-3 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition-all font-medium text-gray-700 shadow-sm">
+        <button
+          onClick={handleGoogleLogin}
+          className="w-full border border-gray-200 py-3 rounded-xl flex items-center justify-center gap-3 hover:bg-gray-50 transition-all font-medium text-gray-700 shadow-sm"
+        >
           <Globe size={18} className="text-blue-500" />
           Login with Google
         </button>
 
         <p className="text-center mt-8 text-gray-600 text-sm">
-          Don't have an account?{" "}
+          Dont have an account?{" "}
           <Link
             href="/register"
             className="text-[#1A6B3C] font-bold hover:underline"

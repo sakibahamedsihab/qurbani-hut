@@ -1,14 +1,16 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import { Tag, Calendar, Weight, MapPin, HeartPulse } from "lucide-react";
 import BookingForm from "./BookingForm";
+import { authClient } from "@/lib/auth-client";
 
 export default function Details({ cow }) {
-  const isLoggedIn = false;
+  const { data: session } = authClient.useSession();
+
   return (
     <div className="grid grid-cols-2 gap-5">
       <div className="space-y-6">
-        
         <div className="relative h-96 w-full overflow-hidden rounded-2xl shadow-lg">
           <Image src={cow.image} alt={cow.name} fill className="object-cover" />
         </div>
@@ -38,7 +40,7 @@ export default function Details({ cow }) {
             </div>
           </div>
         </div>
-      
+
         <div className="mt-6 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 mb-3">
             <HeartPulse size={24} className="text-[#1A6B3C]" />
@@ -52,7 +54,7 @@ export default function Details({ cow }) {
           </p>
         </div>
       </div>
-      {isLoggedIn ? (
+      {session ? (
         <BookingForm cow={cow} />
       ) : (
         <div className="p-4 bg-yellow-100 text-yellow-800 rounded">
