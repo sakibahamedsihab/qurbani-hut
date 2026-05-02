@@ -20,8 +20,12 @@ export default function Navbar() {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <Button variant="outline">Login</Button>
-            <Button variant="outline">Register</Button>
+            <Link href={"/login"}>
+              <Button variant="outline">Login</Button>
+            </Link>
+            <Link href={"/register"}>
+              <Button variant="outline">Register</Button>
+            </Link>
           </div>
         )}
       </div>
