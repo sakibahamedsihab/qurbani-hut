@@ -1,10 +1,13 @@
 import Feature from "./components/Feature";
+import Hero from "./components/Hero";
 import QurbaniTips from "./components/QurbaniTips";
 
 export default function Home() {
   return (
     <div>
-      <h1>Home Page</h1>
+      <section className="min-h-80vh">
+        <Hero />
+      </section>
       <Feature />
       <QurbaniTips />
     </div>
